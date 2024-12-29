@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  directus:
+    image: directus/directus:11.2.2  # Specify a fixed Directus version for stability
+    ports:
+      - 8055:8055
+    volumes:
+      - ./uploads:/directus/uploads      # Persist uploaded files
+      - ./extensions:/directus/extensions  # Extensions directory for custom Directus extensions
+    environment:
+      SECRET: "replace-with-secure-random-value"  # Secure secret for Directus
+      ADMIN_EMAIL: "admin@example.com"     # Admin user email
+      ADMIN_PASSWORD: "password"                 # Admin user password
+      DB_CLIENT: "pg"                            # Using PostgreSQL
+      DB_HOST: "db"                              # Database service name (linked container name)
+      DB_PORT: "5432"                            # Default PostgreSQL port
+      DB_DATABASE: "postgres"                    # Database name
+      DB_USER: "postgres"                        # Database user
+      DB_PASSWORD: "654321"                      # Database password
+      WEBSOCKETS_ENABLED: "true"                # Enable WebSocket support
+      CORS_ENABLED: "true"                      # Enable Cross-Origin Resource Sharing (CORS)
+      CORS_ORIGIN: "*"                          # Allow all origins (use caution in production)
+      GRAPHQL_ENABLED: "true"                    # Enable GraphQL API
+
+  db:
+    image: postgres:latest                      # Use the latest PostgreSQL image
+    environment:
+      POSTGRES_DB: "postgres"                   # Database name
+      POSTGRES_USER: "postgres"                 # Database user
+      POSTGRES_PASSWORD: "654321"               # Database password
+    volumes: 
+      - db_data:/var/lib/postgresql/data        # Persist database data
+
+volumes:
+  db_data:  # Volume for PostgreSQL data
